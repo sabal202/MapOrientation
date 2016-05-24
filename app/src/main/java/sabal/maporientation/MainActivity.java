@@ -42,10 +42,12 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     int robotsCurX = 4;
     String Y = "1";
     String N = "0";
-
+    Point can1 = new Point(0, 0);
+    Point can2 = new Point(0, 0);
+    Point can3 = new Point(0, 0);
     int equalsN = 0;
     ArrayList<Point> equalses = new ArrayList<Point>();
-    boolean have = false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -140,7 +142,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                         robotsCurY = equalses.get(0).y;
                     } else {
                         //поворачиваем и проезжаем на следующую клетку (случайно выбранную или до какого поворота ближе)
-                        //по соответствующему направлению делаем коорд curCell.charAt() == "Y"
+                        //по соответствующему направлению делаем коорд curCell.charAt(0123) == "Y"
                         robotsCurX++;
                         robotsCurY++;
                         //присваиваем в moves точки движения
@@ -170,22 +172,23 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                     break;
             }
         }
+        //поиск пути до ближайшей банки волновым способом
+
     }
 
     private String cellScan() {
         String curCell = "";
         for (int i = 0; i < 4; i++) {
-
             //получаем кадр
-            //определяем есть ли есть ли путь в эту сторону
+            //определяем есть ли путь в эту сторону
+            boolean haveWay = false;
             //записываем в массив робота свойства клетки
-            if (have) {
+            if (haveWay) {
                 curCell += Y;
             } else {
                 curCell += N;
             }
             //поворот на 90 градусов вправо
-
         }
         return curCell;
     }
