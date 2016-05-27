@@ -24,13 +24,18 @@ import java.util.ArrayList;
 public class MainActivity extends Activity implements CvCameraViewListener2 {
     public static final int MAP_LENGTH = 8;
     public static final int MAP_HEIGHT = 4;
+    public static int direction;
     private CameraBridgeViewBase mOpenCvCameraView;
     private Mat mIntermediateMat;
     public Robot2WD Controller;
     boolean BTconnected = false;
     boolean click = false;
     boolean known = false;
-    public String direction;
+    public static final int NORTH = 1;
+    public static final int EAST = 2;
+    public static final int SOUTH = 3;
+    public static final int WEST = 4;
+
     ArrayList<Point> moves = new ArrayList<Point>();
     //UP, RIGHT, DOWN, LEFT
     String map[][] =
@@ -120,11 +125,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                         robotsCurY = equalses.get(0).y;
                     } else {
                         //поворачиваем и проезжаем на следующую клетку (случайно выбранную или до какого поворота ближе)
-                        //по соответствующему направлению делаем коорд curCell.charAt() == "Y"
-                        robotsCurX++;
-                        robotsCurY++;
-                        //присваиваем в moves точки движения противоположные изменению коорд
-                        moves.add(new Point(-1, -1));
+                        selectNextCellToRide();
                     }
                     equalses.clear();
                     equalsN = 0;
@@ -146,11 +147,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                         robotsCurY = equalses.get(0).y;
                     } else {
                         //поворачиваем и проезжаем на следующую клетку (случайно выбранную или до какого поворота ближе)
-                        //по соответствующему направлению делаем коорд curCell.charAt(0123) == "Y"
-                        robotsCurX++;
-                        robotsCurY++;
-                        //присваиваем в moves точки движения
-                        moves.add(new Point(-1, -1));
+                        selectNextCellToRide();
                     }
                     equalses.clear();
                     equalsN = 0;
@@ -177,7 +174,74 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             }
         }
         //поиск пути до ближайшей банки волновым способом
+        String wayToCan1 = distToPointFromPoint(can1, new Point(robotsCurX, robotsCurY));
+        String wayToCan2 = distToPointFromPoint(can2, new Point(robotsCurX, robotsCurY));
+        String wayToCan3 = distToPointFromPoint(can3, new Point(robotsCurX, robotsCurY));
+        if (wayToCan1.length() <= wayToCan2.length() && wayToCan1.length() <= wayToCan3.length()) {
+            try {
+                Controller.RideTo(wayToCan1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (wayToCan2.length() <= wayToCan1.length() && wayToCan2.length() <= wayToCan3.length()) {
+            try {
+                Controller.RideTo(wayToCan2);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                Controller.RideTo(wayToCan3);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    private String distToPointFromPoint(Point to, Point from) {
+        String way = "";
+        int mapDist[][] = new int[MAP_LENGTH][MAP_HEIGHT];
+        return way;
+    }
+
+
+    private void selectNextCellToRide() {
+        if (robotsMap[robotsCurX][robotsCurY].charAt(0) == 'Y') {
+            try {
+                Controller.TurnTo(NORTH);
+                robotsCurY--;
+                moves.add(new Point(0, 1));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (robotsMap[robotsCurX][robotsCurY].charAt(1) == 'Y') {
+            try {
+                Controller.TurnTo(EAST);
+                robotsCurX++;
+                moves.add(new  Point(-1, 0));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (robotsMap[robotsCurX][robotsCurY].charAt(2) == 'Y') {
+            try {
+                Controller.TurnTo(SOUTH);
+                robotsCurY++;
+                moves.add(new  Point(0, -1));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                Controller.TurnTo(WEST);
+                robotsCurX--;
+                moves.add(new  Point(1, 0));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //по соответствующему направлению делаем коорд
+
+        //присваиваем в moves точки движения противоположные изменению коорд
     }
 
     private String cellScan() {
