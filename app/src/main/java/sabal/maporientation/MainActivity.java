@@ -22,29 +22,33 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity implements CvCameraViewListener2 {
-    public static final int MAP_LENGTH = 7;
-    public static final int MAP_HEIGHT = 3;
+    public static final int MAP_LENGTH = 8;
+    public static final int MAP_HEIGHT = 4;
     private CameraBridgeViewBase mOpenCvCameraView;
     private Mat mIntermediateMat;
     public Robot2WD Controller;
     boolean BTconnected = false;
     boolean click = false;
     boolean known = false;
+    public String direction;
     ArrayList<Point> moves = new ArrayList<Point>();
     //UP, RIGHT, DOWN, LEFT
     String map[][] =
-            {{"0110", "0101", "0111", "0111", "0101", "0011", "0110", "0011"},
-                    {"1110", "0101", "1101", "1111", "0101", "1111", "1011", "1010"},
-                    {"1110", "0101", "0011", "1010", "0110", "1111", "1111", "1011"},
-                    {"1100", "0101", "1101", "1101", "1001", "1100", "1101", "1001"}};
+                    {{"0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"},
+                    {"0000", "0110", "0101", "0111", "0111", "0101", "0011", "0110", "0011", "0000"},
+                    {"0000", "1110", "0101", "1101", "1111", "0101", "1111", "1011", "1010", "0000"},
+                    {"0000", "1110", "0101", "0011", "1010", "0110", "1111", "1111", "1011", "0000"},
+                    {"0000", "1100", "0101", "1101", "1101", "1001", "1100", "1101", "1001", "0000"},
+                    {"0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"}};
     String robotsMap[][] = new String[MAP_LENGTH][MAP_HEIGHT];
     int robotsCurY = 2;
     int robotsCurX = 4;
     String Y = "1";
     String N = "0";
-    Point can1 = new Point(0, 0);
-    Point can2 = new Point(0, 0);
-    Point can3 = new Point(0, 0);
+    //коорд банок опред по map
+    Point can1 = new Point(0 + 1, 0 + 1);
+    Point can2 = new Point(0 + 1, 0 + 1);
+    Point can3 = new Point(0 + 1, 0 + 1);
     int equalsN = 0;
     ArrayList<Point> equalses = new ArrayList<Point>();
 
@@ -102,8 +106,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                 case 0:
                     robotsMap[robotsCurX][robotsCurY] = cellScan();
                     //проверка по карте
-                    for (int i = 0; i < MAP_LENGTH; i++) {
-                        for (int j = 0; j < MAP_HEIGHT; j++) {
+                    for (int i = 1; i <= MAP_LENGTH; i++) {
+                        for (int j = 1; j <= MAP_HEIGHT; j++) {
                             if (robotsMap[robotsCurX][robotsCurY].equals(map[i][j])) {
                                 equalsN++;
                                 equalses.add(new Point(i, j));
@@ -127,8 +131,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                     break;
                 case 1:
                     robotsMap[robotsCurX][robotsCurY] = cellScan();
-                    for (int i = 0; i < MAP_LENGTH; i++) {
-                        for (int j = 0; j < MAP_HEIGHT; j++) {
+                    for (int i = 1; i <= MAP_LENGTH; i++) {
+                        for (int j = 1; j <= MAP_HEIGHT; j++) {
                             if (robotsMap[robotsCurX][robotsCurY].equals(map[i][j]) &&
                                     robotsMap[robotsCurX + moves.get(1).x][robotsCurY + moves.get(1).y].equals(map[i + moves.get(1).x][j + moves.get(1).y])) {
                                 equalsN++;
@@ -153,8 +157,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                     break;
                 case 2:
                     robotsMap[robotsCurX][robotsCurY] = cellScan();
-                    for (int i = 0; i < MAP_LENGTH; i++) {
-                        for (int j = 0; j < MAP_HEIGHT; j++) {
+                    for (int i = 1; i <= MAP_LENGTH; i++) {
+                        for (int j = 1; j <= MAP_HEIGHT; j++) {
                             if (robotsMap[robotsCurX][robotsCurY].equals(map[i][j]) &&
                                     robotsMap[robotsCurX + moves.get(1).x][robotsCurY + moves.get(1).y].equals(map[i + moves.get(1).x][j + moves.get(1).y]) &&
                                     robotsMap[robotsCurX + moves.get(2).x][robotsCurY + moves.get(2).y].equals(map[i + moves.get(2).x][j + moves.get(2).y])) {
