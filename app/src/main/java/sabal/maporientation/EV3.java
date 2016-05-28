@@ -14,20 +14,27 @@ public class EV3 extends Connector {
 
     @Override
     public void TurnTo(int endDir) throws IOException {
-        //Получить значение с компаса
-//        int curDir = MainActivity.direction;
-//        int dD = endDir - curDir;
-//        while (dD < -5 || dD > 5) {
-//            if (dD < -5) {
-//                MotorsPowerOn();
-//                MotorsPowerSet();
-//            }
-//        }
+        
     }
 
     @Override
     public void RideTo(String way) throws IOException {
-
+for (int i = 0; i < way.length(); i++) {
+switch(way.charAt(i)){
+case 'N':
+TurnTo(MainActivity.NORTH);
+break;
+case 'E':
+TurnTo(MainActivity.EAST);
+break;
+case 'S':
+TurnTo(MainActivity.SOUTH);
+break;
+case 'W':
+TurnTo(MainActivity.WEST);
+break;
+}
+}
     }
 
     public void MotorsPowerOff() throws IOException {
